@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalji Prostora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-oNiVAn3XCX1aB9DlIhSUPkplXR_hsH0",
+            authDomain: "nekretnine-796e5.firebaseapp.com",
+            projectId: "nekretnine-796e5",
+            storageBucket: "nekretnine-796e5.appspot.com",
+            messagingSenderId: "383875637528",
+            appId: "1:383875637528:web:3b0557723b7402d9eb3e6d",
+            measurementId: "G-DQWTGPH1LX"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const propertyId = urlParams.get('id');
+
+            if (propertyId) {
+                const propertyDoc = doc(db, 'prostor', propertyId);
+                const docSnapshot = await getDoc(propertyDoc);
+                
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    document.querySelector('.title').textContent = data.title;
+                    document.querySelector('.price').textContent = `Cijena: ${data.price}`;
+
+                    // Postavljanje početne slike
+                    const images = data.images;
+                    let currentIndex = 0;
+                    document.getElementById('main-image').src = images[currentIndex];
+
+                    // Dodavanje event listenera za strelice
+                    document.querySelector('.left-arrow').addEventListener('click', () => {
+                        currentIndex = (currentIndex - 1 + images.length) % images.length;
+                        document.getElementById('main-image').src = images[currentIndex];
+                    });
+
+                    document.querySelector('.right-arrow').addEventListener('click', () => {
+                        currentIndex = (currentIndex + 1) % images.length;
+                        document.getElementById('main-image').src = images[currentIndex];
+                    });
+
+                    document.querySelector('.floor').textContent = ` ${data.floor}`;
+                    document.querySelector('.city').textContent = ` ${data.city}`;
+                    document.querySelector('.area').textContent = ` ${data.area} m²`;
+                    document.querySelector('.heating').textContent = ` ${data.heating}`;
+                    document.querySelector('.year').textContent = ` ${data.year}`;
+                    document.querySelector('.address').textContent = ` ${data.address}`;
+                    document.querySelector('.purpose').textContent = ` ${data.purpose}`;
+                    document.querySelector('.condition').textContent = ` ${data.condition}`;
+
+                    document.querySelector('.description').textContent = data.description;
+
+                    if (data.floorPlan) {
+                        document.querySelector('.floor-plan').src = data.floorPlan;
+                    }
+
+                    // Log latitude and longitude
+                    console.log('Latitude:', data.latitude);
+                    console.log('Longitude:', data.longitude);
+
+                    // Initialize map with data
+                    const latitude = parseFloat(data.latitude);
+                    const longitude = parseFloat(data.longitude);
+
+                    // Check if the coordinates are correct
+                    if (!isNaN(latitude) && !isNaN(longitude)) {
+                        const map = L.map('map').setView([latitude, longitude], 13);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        }).addTo(map);
+
+                        L.marker([latitude, longitude]).addTo(map)
+                            .bindPopup('Lokacija nekretnine')
+                            .openPopup();
+                    } else {
+                        console.error('Invalid latitude or longitude');
+                    }
+                } else {
+                    console.error('Document not found');
+                }
+            }
+        });
+    </script>
+    <style>
+        /* General body styling for the prostor page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            margin-right: 50px;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+    nav ul {
+        margin-right: 0; /* Uklanja desni margin */
+        padding: 0; /* Uklanja padding */
+        margin-left: 10px; /* Pomera nav ul ulijevo */
+        justify-content: center; /* Centriranje stavki u nav */
+    }
+
+    nav ul li {
+        margin-left: -1px; /* Smanjuje razmak između stavki */
+        margin-right: 5px; /* Dodaje razmak između stavki za balans */
+    }
+
+    nav ul li a {
+        font-size: 16px; /* Smanjuje veličinu fonta ako je potrebno za mobilne uređaje */
+    margin-right: 15px;
+    }
+}
+
+
+        main {
+            padding-top: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .property-container {
+            max-width: 800px;
+            width: 80%;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            margin-top: 100px;
+            margin-left: 250px;
+        }
+
+
+        
+        .box {
+            margin-bottom: 20px;
+        }
+
+        .box h2, .box h3 {
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+        }
+
+        .image-container {
+    width: 100%;
+    height: 400px; /* Postavi visinu koja odgovara tvojoj dizajnerskoj zamisli */
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .left-arrow {
+            left: 10px;
+        }
+
+        .right-arrow {
+            right: 10px;
+        }
+
+        .box-content {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .box-content p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .details-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .details-list li {
+            margin-bottom: 10px;
+        }
+
+        .details-list span {
+            font-weight: bold;
+        }
+
+        .floor-plan {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .box-content {
+                padding: 20px;
+            }
+        }
+
+        .details-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .details-item {
+            flex: 1 1 100%;
+            background: #ffffff;
+            border-radius: 5px;
+            padding: 8px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .details-item h3 {
+            margin-top: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .details-item p {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media (min-width: 768px) {
+            .details-item {
+                flex: 1 1 calc(50% - 10px);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .details-item {
+                flex: 1 1 calc(25% - 10px);
+            }
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .property-container {
+            width: 70%;
+            margin: 20px;
+            margin-top: 100px;
+        }
+
+        .new-boxes {
+            width: 25%;
+            
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+    margin-top: 100px;
+    max-width: 250px; /* Podesi širinu prema potrebi */
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.additional-box {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 250px; /* Podesi širinu prema potrebi */
+}
+
+.additional-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        align-items: flex-start; /* Ovo će postaviti elemente na početak glavne ose */
+    }
+
+    .property-container {
+        width: 90%;
+        margin: 0;
+        margin-top: 50px;
+    }
+
+    .new-boxes {
+        width: 88%;
+        align-self: flex-start; /* Ovo će postaviti .new-boxes ulijevo */
+        gap: 20px;
+    }
+
+    .contact-box,
+    .additional-box {
+        max-width: 100%;
+    }
+    
+}
+
+html, body {
+    overflow-x: hidden; /* Onemogućava horizontalno pomeranje */
+    max-width: 100%; /* Osigurava da se širina stranice ne prelazi */
+}
+
+
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <div class="logo">
+                <img src="images/robot.png" alt="Logo" style="height: 30px;">
+            </div>
+        </a>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">Početna</a></li>
+                <li><a href="rent.html">Prostori</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+<main>
+    <div class="main-container">
+        <div class="property-container">
+            <div class="box">
+                
+                <div class="image-container">
+                    <img id="main-image" src="" alt="Property Image">
+                    <div class="arrow left-arrow">&larr;</div>
+                    <div class="arrow right-arrow">&rarr;</div>
+                </div>
+
+                
+                <h2 class="title">Naslov nekretnine</h2>
+                <h3 class="price">Cijena: 0</h3>
+            </div>
+            <div class="box">
+                <h2>Detalji</h2>
+                <div class="box-content">
+                    <div class="details-container">
+                        <div class="details-item">
+                            <h3>Adresa</h3>
+                            <p class="address"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Grad</h3>
+                            <p class="city"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Kvadrata</h3>
+                            <p class="area"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Vrsta grijanja</h3>
+                            <p class="heating"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Godina izgradnje</h3>
+                            <p class="year"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Namjena</h3>
+                            <p class="purpose"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Stanje</h3>
+                            <p class="condition"></p>
+                        </div>
+                        <div class="details-item">
+                            <h3>Sprat</h3>
+                            <p class="floor"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Box -->
+            <div class="box">
+                <h2>Detaljan opis</h2>
+                <div class="box-content">
+                    <p class="description"></p>
+                </div>
+            </div>
+            <!-- Floor Plan Box -->
+            <div class="box">
+                <h2>Tlocrt</h2>
+                <img class="floor-plan" src="" alt="Floor Plan">
+            </div>
+             <!-- Map Box -->
+             <div class="box">
+                <h2>Lokacija nekretnine</h2>
+                <div id="map"></div>
+            </div>
+        </div>
+        
+        <div class="new-boxes">
+            <div class="contact-box">
+                <img class="profile-pic" src="images/agent.jpg" alt="Profile Picture">
+                <h3>Ime Prezime</h3>
+                <p>Telefon: 012-345-6789</p>
+                <p>Email: email@example.com</p>
+            </div>
+
+            <div class="additional-box">
+                <img class="additional-image" src="images/ponuda katalog.webp" alt="Additional Image" onclick="redirectToPage()">
+            </div>
+
+            <script>
+                function redirectToPage() {
+                    window.location.href = "https://robot.ba/";
+                }
+            </script>
+
+     
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+</main>
+</body>
+</html>

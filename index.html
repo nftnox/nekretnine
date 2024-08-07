@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nekretnine</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-oNiVAn3XCX1aB9DlIhSUPkplXR_hsH0",
+            authDomain: "nekretnine-796e5.firebaseapp.com",
+            projectId: "nekretnine-796e5",
+            storageBucket: "nekretnine-796e5.appspot.com",
+            messagingSenderId: "383875637528",
+            appId: "1:383875637528:web:3b0557723b7402d9eb3e6d",
+            measurementId: "G-DQWTGPH1LX"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            const propertyList = document.querySelector('.property-boxes');
+            const querySnapshot = await getDocs(collection(db, 'prostor'));
+            
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const docId = doc.id; // Get the document ID
+        
+                const propertyBox = document.createElement('div');
+                propertyBox.classList.add('property-box');
+                
+                const propertyHTML = `
+                    <a href="prostor.html?id=${docId}">
+                        <img src="${data.images[0]}" alt="Nekretnina">
+                        <h3>${data.title}</h3>
+                        <div class="property-info">
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i> <!-- Location icon -->
+                                <span>${data.address}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-ruler"></i> <!-- Space icon -->
+                                <span>${data.area}m²</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-euro-sign"></i> <!-- Euro icon -->
+                                <span>Cijena: ${data.price}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-building"></i> <!-- Building icon -->
+                                <span>Sprat: ${data.floor}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                
+                propertyBox.innerHTML = propertyHTML;
+                propertyList.appendChild(propertyBox);
+            });
+
+            const searchForm = document.getElementById('search-form');
+            searchForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const title = document.getElementById('search-title').value;
+                const purpose = document.getElementById('search-purpose').value;
+                const condition = document.getElementById('search-condition').value;
+                const city = document.getElementById('search-city').value;
+
+                const queryParams = new URLSearchParams({
+                    title,
+                    purpose,
+                    condition,
+                    city
+                });
+
+                window.location.href = `rent.html?${queryParams.toString()}`;
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/robot.png" alt="Logo" style="height: 30px;">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Početna</a></li>
+                <li><a href="rent.html">Prostori</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="image-container">
+            <div class="slides">
+                <img src="images/rajlovac.jpg" alt="Rajlovac" class="slide">
+                <img src="images/tuzla.webp" alt="Slika 2" class="slide">
+                <img src="images/gracanica.jpg" alt="Slika 3" class="slide">
+            </div>
+            <div class="dots">
+                <!-- Tačkice će biti dodane ovdje dinamički -->
+            </div>
+            <section class="search-bar">
+                <form id="search-form">
+                    <input type="text" id="search-title" placeholder="Unesi kljucnu rijec">
+                    <select id="search-purpose">
+                        <option value="">Namjena</option>
+                        <option value="Sve">Sve</option>
+                        <option value="Iznajmljivanje">Iznajmljivanje</option>
+                        <option value="Prodaja">Prodaja</option>
+                    </select>
+                    <select id="search-condition">
+                        <option value="">Stanje</option>
+                        <option value="Novogradnja">Novogradnja</option>
+                        <option value="Renovirano">Renovirano</option>
+                        <option value="Odlicno stanje">Odlicno stanje</option>
+                        <option value="U izgradnji">U izgradnji</option>
+                    </select>
+                    <select id="search-city">
+                        <option value="">Grad</option>
+                        <option value="Sarajevo">Sarajevo</option>
+                        <option value="Mostar">Mostar</option>
+                        <option value="Cazin">Cazin</option>
+                        <option value="Tuzla">Tuzla</option>
+                        <option value="Zenica">Zenica</option>
+                    </select>
+                    <button type="submit" class="search-button">Traži</button>
+                </form>
+            </section>
+        </div>
+        
+        <section class="property-listing">
+            <h2>SVE NEKRETNINE</h2>
+            <div class="property-boxes">
+                <!-- Dynamically filled content from Firestore -->
+            </div>
+        </section>
+    </main>
+    
+    
+    
+    
+    <script>
+        let slideIndex = 0;
+    
+        function showSlides() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            slides.forEach((slide, index) => {
+                slide.style.display = (index === slideIndex) ? 'block' : 'none';
+            });
+            dots.forEach((dot, index) => {
+                dot.className = dot.className.replace(' active', '');
+                if (index === slideIndex) {
+                    dot.className += ' active';
+                }
+            });
+        }
+    
+        function plusSlides(n) {
+            const slides = document.querySelectorAll('.slide');
+            slideIndex += n;
+    
+            if (slideIndex >= slides.length) {
+                slideIndex = 0;
+            } else if (slideIndex < 0) {
+                slideIndex = slides.length - 1;
+            }
+    
+            showSlides();
+        }
+    
+        function currentSlide(n) {
+            slideIndex = n;
+            showSlides();
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            showSlides(); // Display the first slide initially
+    
+            const dotsContainer = document.querySelector('.dots');
+            const slides = document.querySelectorAll('.slide');
+    
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                dot.addEventListener('click', () => currentSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+    
+            setInterval(() => plusSlides(1), 5000); // Change slide every 5 seconds
+        });
+    </script>
+    
+    
+        
+
+     
+</body>
+</html>

@@ -1,0 +1,435 @@
+
+
+ovako unosim unos.html                <form id="property-form">
+            <h1>Unos Nekretnine</h1>
+            <label for="title">Naslov:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="price">Cijena:</label>
+            <input type="number" id="price" name="price" required>
+            
+            <label for="description">Opis:</label>
+            <textarea id="description" name="description" required></textarea>
+            
+            <label for="floor">Sprat:</label>
+            <input type="text" id="floor" name="floor" required>
+            
+            <label for="area">Površina:</label>
+            <input type="number" id="area" name="area" required>
+            
+            <label for="heating">Grijanje:</label>
+            <input type="text" id="heating" name="heating" required>
+            
+            <label for="year">Godina izgradnje:</label>
+            <input type="number" id="year" name="year" required>
+            
+            <label for="address">Adresa:</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="purpose">Namjena:</label>
+            <input type="text" id="purpose" name="purpose" required>
+            
+            <label for="condition">Stanje:</label>
+            <input type="text" id="condition" name="condition" required>
+
+            <label for="city">Grad:</label>
+            <input type="text" id="city" name="city" required>
+
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude" readonly>
+
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude" readonly>
+
+            <label for="images">Slike:</label>
+<input type="file" id="images" name="images" accept="image/*" multiple required>
+
+
+            <label for="floor-plan">Tlocrt:</label>
+            <input type="file" id="floor-plan" name="floor-plan" accept="image/*">
+            
+            <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+            
+            <button type="submit">Sačuvaj</button>
+        </form>                          onda imam stranicu index.html          <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Nekretnine</title>
+            <link rel="stylesheet" href="style.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        
+            <!-- Firebase SDKs -->
+            <script type="module">
+                import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+                import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+                
+                // Your web app's Firebase configuration
+                const firebaseConfig = {
+                    apiKey: "AIzaSyD-oNiVAn3XCX1aB9DlIhSUPkplXR_hsH0",
+                    authDomain: "nekretnine-796e5.firebaseapp.com",
+                    projectId: "nekretnine-796e5",
+                    storageBucket: "nekretnine-796e5.appspot.com",
+                    messagingSenderId: "383875637528",
+                    appId: "1:383875637528:web:3b0557723b7402d9eb3e6d",
+                    measurementId: "G-DQWTGPH1LX"
+                };
+                // Initialize Firebase
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+                
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const propertyList = document.querySelector('.property-boxes');
+                    const querySnapshot = await getDocs(collection(db, 'prostor'));
+                    
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const docId = doc.id; // Get the document ID
+              
+                        const propertyBox = document.createElement('div');
+                        propertyBox.classList.add('property-box');
+                        
+                        const propertyHTML = `
+                            <a href="prostor.html?id=${docId}">
+                                <img src="${data.images[0]}" alt="Nekretnina">
+                                <h3>${data.title}</h3>
+                                <div class="property-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-map-marker-alt"></i> <!-- Location icon -->
+                                        <span>${data.address}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-ruler"></i> <!-- Space icon -->
+                                        <span>${data.area}m²</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-euro-sign"></i> <!-- Euro icon -->
+                                        <span>Cijena: ${data.price}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-building"></i> <!-- Building icon -->
+                                        <span>Sprat: ${data.floor}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                        
+                        propertyBox.innerHTML = propertyHTML;
+                        propertyList.appendChild(propertyBox);
+                    });
+                });
+              </script>
+              
+        </head>
+        <body>
+            <header>
+                <div class="logo">
+                    <img src="images/robot.png" alt="Logo" style="height: 30px;">
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Početna</a></li>
+                        <li><a href="#">Prostori</a></li>
+                        <li><a href="#">Kontakt</a></li>
+                    </ul>
+                </nav>
+            </header>
+        
+            <main>
+                <div class="image-container">
+                    <img src="images/rajlovac.jpg" alt="Rajlovac">
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Unesite ključnu riječ">
+                    <select>
+                        <option value="" disabled selected>Odaberi grad</option>
+                        <option value="sarajevo">Sarajevo</option>
+                        <option value="mostar">Mostar</option>
+                        <option value="banja luka">Banja Luka</option>
+                        <option value="cazin">Cazin</option>
+                        <!-- Dodajte ostale gradove po potrebi -->
+                    </select>
+                    <select>
+                        <option value="" disabled selected>Namjena</option>
+                        <option value="sve">Sve</option>
+                        <option value="iznajmljivanje">Iznajmljivanje</option>
+                        <option value="prodaja">Prodaja</option>
+                    </select>
+                    <select>
+                        <option value="" disabled selected>Stanje</option>
+                        <option value="novogradnja">Novogradnja</option>
+                        <option value="renovirano">Renovirano</option>
+                        <option value="odlicno stanje">Odlicno stanje</option>
+                        <option value="u izgradnji">U izgradnji</option>
+                    </select>
+                </div>
+        
+                <section class="property-listing">
+                    <h2>SVE NEKRETNINE</h2>
+                    <div class="property-boxes">
+                        <!-- Dynamically filled content from Firestore -->
+                    </div>
+                </section>
+            </main>
+        </body>
+        </html>
+        
+                       na index se prikaze sve sto se unijelo u unos.html, sada iz indexa zelim kada npr odaberem sarajevo novogradnja i kliknem trazi onda da me prebacis na stranicu rent.html i onda ces na toj stranici prikazati samo te prostore koje sam odabrao npr sarajevo novogradnja, dakle moras i kreirati rent.html i ostalo doraditi
+
+
+
+
+
+
+
+
+
+                       index.html                  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nekretnine</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-oNiVAn3XCX1aB9DlIhSUPkplXR_hsH0",
+            authDomain: "nekretnine-796e5.firebaseapp.com",
+            projectId: "nekretnine-796e5",
+            storageBucket: "nekretnine-796e5.appspot.com",
+            messagingSenderId: "383875637528",
+            appId: "1:383875637528:web:3b0557723b7402d9eb3e6d",
+            measurementId: "G-DQWTGPH1LX"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            const propertyList = document.querySelector('.property-boxes');
+            const querySnapshot = await getDocs(collection(db, 'prostor'));
+            
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const docId = doc.id; // Get the document ID
+        
+                const propertyBox = document.createElement('div');
+                propertyBox.classList.add('property-box');
+                
+                const propertyHTML = `
+                    <a href="prostor.html?id=${docId}">
+                        <img src="${data.images[0]}" alt="Nekretnina">
+                        <h3>${data.title}</h3>
+                        <div class="property-info">
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i> <!-- Location icon -->
+                                <span>${data.address}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-ruler"></i> <!-- Space icon -->
+                                <span>${data.area}m²</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-euro-sign"></i> <!-- Euro icon -->
+                                <span>Cijena: ${data.price}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-building"></i> <!-- Building icon -->
+                                <span>Sprat: ${data.floor}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                
+                propertyBox.innerHTML = propertyHTML;
+                propertyList.appendChild(propertyBox);
+            });
+
+            // Handle the search form submission
+            const searchButton = document.querySelector('.search-box button');
+            searchButton.addEventListener('click', () => {
+                const keyword = document.querySelector('.search-box input').value.toLowerCase();
+                const city = document.querySelector('.search-box select:nth-of-type(1)').value;
+                const condition = document.querySelector('.search-box select:nth-of-type(3)').value;
+
+                const url = new URL('rent.html', window.location.href);
+                if (keyword) url.searchParams.append('keyword', keyword);
+                if (city) url.searchParams.append('city', city);
+                if (condition) url.searchParams.append('condition', condition);
+
+                window.location.href = url.toString();
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/robot.png" alt="Logo" style="height: 30px;">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Početna</a></li>
+                <li><a href="#">Prostori</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="image-container">
+            <img src="images/rajlovac.jpg" alt="Rajlovac">
+        </div>
+        <div class="search-box">
+            <input type="text" placeholder="Unesite ključnu riječ">
+            <select name="city">
+                <option value="" disabled selected>Odaberi grad</option>
+                <option value="sarajevo">Sarajevo</option>
+                <option value="mostar">Mostar</option>
+                <option value="banja luka">Banja Luka</option>
+                <option value="cazin">Cazin</option>
+                <!-- Dodajte ostale gradove po potrebi -->
+            </select>
+            <select name="purpose">
+                <option value="" disabled selected>Namjena</option>
+                <option value="sve">Sve</option>
+                <option value="iznajmljivanje">Iznajmljivanje</option>
+                <option value="prodaja">Prodaja</option>
+            </select>
+            <select name="condition">
+                <option value="" disabled selected>Stanje</option>
+                <option value="novogradnja">Novogradnja</option>
+                <option value="renovirano">Renovirano</option>
+                <option value="odlicno stanje">Odlicno stanje</option>
+                <option value="u izgradnji">U izgradnji</option>
+            </select>
+            <button type="button">Trži</button>
+        </div>
+        
+
+        <section class="property-listing">
+            <h2>SVE NEKRETNINE</h2>
+            <div class="property-boxes">
+                <!-- Dynamically filled content from Firestore -->
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+                                        rent.html               <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezultati Pretrage</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-oNiVAn3XCX1aB9DlIhSUPkplXR_hsH0",
+            authDomain: "nekretnine-796e5.firebaseapp.com",
+            projectId: "nekretnine-796e5",
+            storageBucket: "nekretnine-796e5.appspot.com",
+            messagingSenderId: "383875637528",
+            appId: "1:383875637528:web:3b0557723b7402d9eb3e6d",
+            measurementId: "G-DQWTGPH1LX"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const propertyList = document.querySelector('.property-boxes');
+            const urlParams = new URLSearchParams(window.location.search);
+            const city = urlParams.get('city');
+            
+            if (city) {
+                const cityCapitalized = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
+                const q = query(collection(db, 'prostor'), where('city', '==', cityCapitalized));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    propertyList.innerHTML = '<p>Nema dostupnih nekretnina za odabrane kriterije.</p>';
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const docId = doc.id;
+        
+                        const propertyBox = document.createElement('div');
+                        propertyBox.classList.add('property-box');
+                        
+                        const propertyHTML = `
+                            <a href="prostor.html?id=${docId}">
+                                <img src="${data.images[0]}" alt="Nekretnina">
+                                <h3>${data.title}</h3>
+                                <div class="property-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-map-marker-alt"></i> <!-- Location icon -->
+                                        <span>${data.address}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-ruler"></i> <!-- Space icon -->
+                                        <span>${data.area}m²</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-euro-sign"></i> <!-- Euro icon -->
+                                        <span>Cijena: ${data.price}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-building"></i> <!-- Building icon -->
+                                        <span>Sprat: ${data.floor}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                        
+                        propertyBox.innerHTML = propertyHTML;
+                        propertyList.appendChild(propertyBox);
+                    });
+                }
+            } else {
+                propertyList.innerHTML = '<p>Nema dostupnih nekretnina za odabrane kriterije.</p>';
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/robot.png" alt="Logo" style="height: 30px;">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Početna</a></li>
+                <li><a href="#">Prostori</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="property-listing">
+            <h2>Rezultati Pretrage</h2>
+            <div class="property-boxes">
+                <!-- Dynamically filled content from Firestore -->
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+                                  ovako uspjesno prikaze prostore kojim odaberem samo grad, pa pokusaj samo update na neki nacin ovaj kod da ako kliknem mostar renovirano da mi onda prikaze samo mostar renovirano

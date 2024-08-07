@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentanje</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-oNiVAn3XCX1aB9DlIhSUPkplXR_hsH0",
+            authDomain: "nekretnine-796e5.firebaseapp.com",
+            projectId: "nekretnine-796e5",
+            storageBucket: "nekretnine-796e5.appspot.com",
+            messagingSenderId: "383875637528",
+            appId: "1:383875637528:web:3b0557723b7402d9eb3e6d",
+            measurementId: "G-DQWTGPH1LX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const propertyList = document.querySelector('.property-boxes');
+            const urlParams = new URLSearchParams(window.location.search);
+            const title = urlParams.get('title');
+            const purpose = urlParams.get('purpose');
+            const condition = urlParams.get('condition');
+            const city = urlParams.get('city');
+
+            let q = collection(db, 'prostor');
+            if (title) q = query(q, where('title', '==', title));
+            if (purpose && purpose !== "Sve") q = query(q, where('purpose', '==', purpose));
+            if (condition) q = query(q, where('condition', '==', condition));
+            if (city) q = query(q, where('city', '==', city));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const docId = doc.id;
+
+                const propertyBox = document.createElement('div');
+                propertyBox.classList.add('property-box');
+
+                const propertyHTML = `
+                    <a href="prostor.html?id=${docId}">
+                        <img src="${data.images[0]}" alt="Nekretnina">
+                        <h3>${data.title}</h3>
+                        <div class="property-info">
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${data.address}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-ruler"></i>
+                                <span>${data.area}m²</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-euro-sign"></i>
+                                <span>Cijena: ${data.price}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-building"></i>
+                                <span>Sprat: ${data.floor}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+
+                propertyBox.innerHTML = propertyHTML;
+                propertyList.appendChild(propertyBox);
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <div class="logo">
+                <img src="images/robot.png" alt="Logo" style="height: 30px;">
+            </div>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Početna</a></li>
+                <li><a href="#">Prostori</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="property-listing">
+            <h2>REZULTATI PRETRAGE</h2>
+            <div class="property-boxes">
+                <!-- Dynamically filled content from Firestore -->
+            </div>
+        </section>
+    </main>
+</body>
+</html>

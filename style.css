@@ -1,0 +1,257 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    margin-right: 50px;
+}
+
+nav ul li {
+    margin-left: 30px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        margin-right: 0; /* Uklanja desni margin */
+        padding: 0; /* Uklanja padding */
+        margin-left: 10px; /* Pomera nav ul ulijevo */
+        justify-content: center; /* Centriranje stavki u nav */
+    }
+
+    nav ul li {
+        margin-left: -1px; /* Smanjuje razmak između stavki */
+        margin-right: 5px; /* Dodaje razmak između stavki za balans */
+    }
+
+    nav ul li a {
+        font-size: 16px; /* Smanjuje veličinu fonta ako je potrebno za mobilne uređaje */
+    margin-right: 15px;
+    }
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 700px; /* Adjust as needed */
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    height: 700px; /* Adjust as needed */
+    object-fit: cover;
+}
+
+.dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: red;
+}
+
+
+
+
+.search-bar {
+    position: absolute; /* Position over the image */
+    top: 70%; /* Adjust as needed */
+    left: 50%; /* Adjust as needed */
+    transform: translate(-50%, -50%); /* Center the form */
+    background-color: rgba(255, 255, 255, 0.7); /* Optional: semi-transparent background for readability */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional: shadow for better visibility */
+    width: 80%; /* Adjust width as needed */
+    max-width: 1200px; /* Ensure it doesn't get too wide */
+}
+
+/* Medijski upit za prilagodbu na mobilne uređaje */
+@media (max-width: 768px) {
+    .image-container {
+        height: 500px; /* Visina slike za manji ekran */
+    }
+
+    .search-bar {
+        width: 95%; /* Širina pretrage za mobilne uređaje */
+        max-width: 320px; /* Maksimalna širina za pretragu na mobilnim uređajima */
+    }
+
+    .dot {
+        height: 10px; /* Manje tačkice za mobilne uređaje */
+        width: 10px; /* Manje tačkice za mobilne uređaje */
+        margin-bottom: 275px;
+    }
+}
+
+.search-bar form {
+    display: flex;
+    gap: 10px; /* Space between elements */
+    flex-wrap: wrap; /* Wrap elements if they don't fit in one line */
+}
+
+.search-bar input[type="text"],
+.search-bar select {
+    flex: 1;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    min-width: 150px; /* Adjust width as needed */
+}
+
+.search-button {
+    background-color: red;
+    color: white;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    min-width: 100px; /* Ensure button has a minimum width */
+}
+
+.search-button:hover {
+    background-color: darkred;
+}
+
+/* Medijski upit za prilagodbu na mobilne uređaje */
+@media (max-width: 768px) {
+    .search-button {
+        display: block; /* Postavi kao blok element za centriranje */
+        margin: 0 auto; /* Centriraj dugme horizontalno */
+        position: relative; /* Ako je potrebno za daljnje prilagodbe */
+    }
+}
+
+.property-listing {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.property-listing h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.property-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.property-box {
+    width: 300px; /* Povećaj širinu boxa */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px; /* Povećaj unutrašnji razmak */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.property-box img {
+    width: 100%;
+    height: 200px; /* Postavite fiksnu visinu za slike, DA SLIKE BUDU UVIJEK ISTE VELICINE*/ 
+    object-fit: cover; /* Ova opcija će prilagoditi slike da popune okvir, zadržavajući njihov aspect ratio */
+    border-radius: 10px;
+}
+
+
+.property-box h3 {
+    color: red;
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+.property-info {
+    margin-top: 10px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.info-item img {
+    width: 20px; /* Adjust icon size as needed */
+    height: 20px;
+    margin-right: 10px;
+}
+
+
+/* Ako želiš da ukloniš podvlačenje sa svih linkova */
+a {
+    text-decoration: none; /* Uklanja podvlačenje */
+    color: inherit; /* Nasleđuje boju od roditeljskog elementa */
+}
+
+/* Ako želiš da kontrolišeš boju linkova */
+a {
+    color: #000; /* Postavi željenu boju */
+}
+
+
+
+
+
