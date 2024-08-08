@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            margin-right: 50px;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                margin-right: 0;
+                padding: 0;
+                margin-left: 10px;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin-left: -1px;
+                margin-right: 5px;
+            }
+
+            nav ul li a {
+                font-size: 16px;
+                margin-right: 15px;
+            }
+        }
+
+        main {
+            padding-top: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .content-container {
+            width: 70%;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 20px;
+            box-sizing: border-box;
+            margin-top: 100px;
+        }
+
+        .content-container h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .content-container p {
+            line-height: 1.6;
+        }
+
+        .new-boxes {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            max-width: 250px;
+            margin-top: 100px;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .additional-box {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 250px;
+        }
+
+        .additional-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .content-container {
+                width: 90%;
+                margin: 0;
+                margin-top: 50px;
+            }
+
+            .new-boxes {
+                width: 88%;
+                align-self: flex-start;
+                gap: 20px;
+            }
+
+            .contact-box,
+            .additional-box {
+                max-width: 100%;
+            }
+        }
+
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
+
+        .new-boxes {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-box {
+    margin-bottom: -80px; /* Postavi negativan margin da smanjiš razmak */
+}
+
+.additional-box {
+    margin-top: 90px; /* Postavi negativan margin da smanjiš razmak */
+}
+
+
+
+/* Desktop-specific styles */
+@media (min-width: 769px) {
+    .main-container {
+        position: relative; /* Allows absolute positioning of .new-boxes relative to .main-container */
+    }
+
+    .new-boxes {
+        position: absolute;
+        right: 0; /* Adjust position as needed */
+        top: 0; /* Position from the top */
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Space between contact boxes */
+    }
+
+    .property-container {
+        flex-grow: 1; /* Allows .property-container to take up remaining space */
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/robot.png" alt="Logo" style="height: 30px;">
+        </div>
+        <nav>
+            <ul>
+                <li>
+                    <i class="fas fa-home" style="font-size: 20px;"></i>
+                    <a href="index.html">Početna</a>
+                </li>
+                <li>
+                    <i class="fas fa-building" style="font-size: 20px;"></i>
+                    <a href="rent.html">Prostori</a>
+                </li>
+                <li>
+                    <i class="fas fa-phone" style="font-size: 20px;"></i>
+                    <a href="#">Kontakt</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+<main>
+    <div class="main-container">
+        <div class="content-container">
+            <h2>O nama</h2>
+            <p>
+                Kompanija Robot General Trading Co d.o.o. osnovana je u Bosni i Hercegovini 1995 i od tada do danas izrasla je u respektabilnu grupaciju. Osnovna djelatnost kompanije je veleprodaja I maloprodaja tehnickim robama, robama siroke potrosnje I prehrambenim proizvodima, maloprodajni lanci – shopping centri, kao i obavljanje usluznih djelatnosti.
+                Danas, nakon vise od dvadeset godina postojanja, grupacija Robot raspolaze sa preko 100.000m2 vlastitog prodajnog, skladisnog I prozvodnog prostora, te zaposljava vise od 1500 radnika.
+                Kompanija Robot plasira proizvode preko odjela veleprodaje, kao I kroz sopstvene prodajnce centre, kojih je trenutno 40 u razlicitim bosanskohercegovackim gradovima.
+            </p>
+            <h2>Misija</h2>
+            <p>
+                Nasa misija je pruziti svakom kupcu najbolji omjer cijene i kvalitete kroz vrhunsku uslugu te pazljivo izabran asortiman kvalitetnih I povoljnih roba sa naglaskom  na domace.
+            </p>
+            <h2>Vizija</h2>
+            <p>
+                Nasa vizija je biti najbolji trgovacki lanac u BiH sinonim za kvalitet i standard, koji ce kucima biti prvi izbor pri kupovini, nezaposlenim pozeljan poslodavac, poslovnim subjektima pouzdan partner I drustveno-odgovorna kompanija.
+            </p>
+        </div>
+        
+        <div class="new-boxes">
+            <div class="contact-box">
+                <img class="profile-pic" src="images/agent.jpg" alt="Profile Picture">
+                <h3>Ime Prezime</h3>
+                <h3>Komercijala</h3>
+                <p>Telefon: 012-345-6789</p>
+                <p>Email: email@example.com</p>
+            </div>
+
+            <div class="contact-box">
+                <img class="profile-pic" src="images/agent.jpg" alt="Profile Picture">
+                <h3>Ime Prezime</h3>
+                <h3>Prodaja</h3>
+                <p>Telefon: 012-345-6789</p>
+                <p>Email: email@example.com</p>
+            </div>
+
+            <div class="contact-box">
+                <img class="profile-pic" src="images/agent.jpg" alt="Profile Picture">
+                <h3>Ime Prezime</h3>
+                <h3>Nekretnine</h3>
+                <p>Telefon: 012-345-6789</p>
+                <p>Email: email@example.com</p>
+            </div>
+
+            <div class="additional-box">
+                <img class="additional-image" src="images/ponuda katalog.webp" alt="Additional Image" onclick="redirectToPage()">
+            </div>
+        </div>
+    </div>
+    <script>
+        function redirectToPage() {
+            window.location.href = "https://robot.ba/";
+        }
+    </script>
+</main>
+</body>
+</html>
