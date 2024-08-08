@@ -94,12 +94,22 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#">Početna</a></li>
-                <li><a href="rent.html">Prostori</a></li>
-                <li><a href="#">Kontakt</a></li>
+                <li>
+                    <i class="fas fa-home" style="font-size: 20px;"></i>
+                    <a href="#">Početna</a>
+                </li>
+                <li>
+                    <i class="fas fa-building" style="font-size: 20px;"></i>
+                    <a href="rent.html">Prostori</a>
+                </li>
+                <li>
+                    <i class="fas fa-phone" style="font-size: 20px;"></i>
+                    <a href="#">Kontakt</a>
+                </li>
             </ul>
         </nav>
     </header>
+    
 
     <main>
         <div class="image-container">
@@ -111,6 +121,14 @@
             <div class="dots">
                 <!-- Tačkice će biti dodane ovdje dinamički -->
             </div>
+        </div>
+        
+        <div class="mobile-banner">
+            <img src="images/SKLADISTE.png" alt="Tražite nekretninu?" class="mobile-banner-img">
+            <div class="mobile-banner-text">TRAŽITE STAN, SKLADIŠTE ILI PROSTOR? NA PRAVOM STE MJESTU</div>
+        </div>
+        
+        <section class="search-container">
             <section class="search-bar">
                 <form id="search-form">
                     <input type="text" id="search-title" placeholder="Unesi kljucnu rijec">
@@ -138,8 +156,8 @@
                     <button type="submit" class="search-button">Traži</button>
                 </form>
             </section>
-        </div>
-        
+        </section>
+    
         <section class="property-listing">
             <h2>SVE NEKRETNINE</h2>
             <div class="property-boxes">
@@ -147,6 +165,8 @@
             </div>
         </section>
     </main>
+    
+    
     
     
     
@@ -204,8 +224,33 @@
     </script>
     
     
-        
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileBannerText = document.querySelector('.mobile-banner-text');
+            
+            if (window.innerWidth <= 767) { // Provjera da li je uređaj mobilni
+                setTimeout(() => {
+                    mobileBannerText.style.display = 'block'; // Prikaži natpis nakon 1 sekunde
+                }, 1000); // 1000 milisekundi = 1 sekunda
+            }
+        });
+    </script>
+    
+<style>
+    @media (max-width: 767px) {
+    .property-listing {
+       margin-top: 280px;
+    }
 
+    
+
+    .property-boxes {
+        margin-top: 50px;
+    }
+
+    
+}
+</style>
      
 </body>
 </html>
